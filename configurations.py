@@ -1,3 +1,5 @@
+import pickle
+
 class Configuration:
 
     def __init__(self):
@@ -26,3 +28,11 @@ class Configuration:
 
     def render(self):
         print("State:", self.alive_cells)
+
+    def save(self, fname):
+        with open(fname, "wb") as f:
+            pickle.dump(self.alive_cells, f)
+    
+    def load(self, fname):
+        with open(fname, "rb") as f:
+            self.alive_cells = pickle.load(f)
