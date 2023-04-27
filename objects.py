@@ -13,10 +13,7 @@ def CompoundGOL_Object(objects):
         return lambda: CompoundGOL_Object(objects())
 
     c = Configuration()
-    d = objects()
-    for k, v in d.items():
-        if callable(v):
-            v = v()
+    for k, v in objects.items():
         c.place(v, loc=k)
     return c
 
