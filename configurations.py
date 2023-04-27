@@ -58,6 +58,12 @@ class Configuration:
         c.set_cells([(cell[0] + loc[0], cell[1] + loc[1]) for cell in self.alive_cells])
         self.alive_cells = c.alive_cells
         return self
+    
+    def shift_to_origin(self):
+        min_x = min(self.alive_cells, key=lambda x: x[0])[0]
+        min_y = min(self.alive_cells, key=lambda y: y[1])[1]
+        self.shift(loc=(-min_x, -min_y))
+        return self
 
     def copy(self):
         c = self.__class__()
@@ -92,9 +98,7 @@ class Configuration:
 
     def save(self, fname):
         with open(fname, "wb") as f:
-            min_x = min(self.alive_cells, key=lambda x: x[0])[0]
-            min_y = min(self.alive_cells, key=lambda y: y[1])[1]
-            shifted = self.copy().shift(loc=(-min_x, -min_y))
+            shifted = self.copy().shift_to_origin()
             pickle.dump(shifted.alive_cells, f)
         return self
 
