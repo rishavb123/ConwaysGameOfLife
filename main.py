@@ -91,9 +91,9 @@ def main():
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
             cell_size = new_cell_size
 
-        if clicked[pygame.K_RIGHT]:
-            g.save(f"./configs/{int(time.time())}.pkl")
         if clicked[pygame.K_LEFT]:
+            g.save(f"./configs/{int(time.time())}.pkl")
+        if clicked[pygame.K_RIGHT]:
             ticking = not ticking
 
         mouse_pressed = pygame.mouse.get_pressed()[0]
