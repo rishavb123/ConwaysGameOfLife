@@ -32,8 +32,8 @@ def main():
     g.render(**kwargs)
 
     old_pressed = {
-        pygame.K_p: False,
-        pygame.K_o: False,
+        pygame.K_LEFT: False,
+        pygame.K_RIGHT: False,
     }
     clicked = {
         **old_pressed
