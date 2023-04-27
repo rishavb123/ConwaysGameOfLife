@@ -21,7 +21,7 @@ def main():
 
     ticking = False
 
-    ox, oy = 0, 0
+    ox, oy = screen.get_width() / 2, screen.get_height() / 2
 
     NUM_CELLS_X = 100
     cell_size = 1280 / NUM_CELLS_X
