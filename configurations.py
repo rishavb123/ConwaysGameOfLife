@@ -68,7 +68,7 @@ class Configuration:
                 sy = oy + j * cell_size
 
                 if -cell_size < sx < w and -cell_size < sy < h:
-                    pygame.draw.rect(surface=screen, color=color, rect=(sx, sy, cell_size, cell_size), )
+                    pygame.draw.rect(surface=screen, color=color, rect=(sx, sy, cell_size, cell_size))
 
 
     def save(self, fname):

@@ -1,6 +1,7 @@
 from game import GameOfLife, RenderType
 from objects import *
 import pygame
+import numpy as np
 
 import time
 
@@ -77,6 +78,23 @@ def main():
         w = screen.get_width()
         h = screen.get_height()
 
+        mouse_pressed = pygame.mouse.get_pressed()[0]
+        if not mouse_old_pressed and mouse_pressed:
+            x, y = pygame.mouse.get_pos()
+            g.flip_cell((
+                int(np.floor((x - ox) / cell_size)),
+                int(np.floor((y - oy) / cell_size)),
+            ))
+        else:
+            x, y = pygame.mouse.get_pos()
+            i = int(np.floor((x - ox) / cell_size))
+            j = int(np.floor((y - oy) / cell_size))
+            sx = ox + i * cell_size
+            sy = oy + j * cell_size
+            color = '#cccccc' if g.is_set((i, j)) else '#333333'
+            pygame.draw.rect(surface=screen, color=color, rect=(sx, sy, cell_size, cell_size), )
+        mouse_old_pressed = mouse_pressed
+
         if keys[pygame.K_UP]:
             inc = 10 * dt
             new_cell_size = cell_size + inc
@@ -95,15 +113,6 @@ def main():
             g.save(f"./configs/{int(time.time())}.pkl")
         if clicked[pygame.K_RIGHT]:
             ticking = not ticking
-
-        mouse_pressed = pygame.mouse.get_pressed()[0]
-        if not mouse_old_pressed and mouse_pressed:
-            x, y = pygame.mouse.get_pos()
-            g.flip_cell((
-                int((x - ox) / cell_size),
-                int((y - oy) / cell_size),
-            ))
-        mouse_old_pressed = mouse_pressed
 
         pygame.display.flip()
 
