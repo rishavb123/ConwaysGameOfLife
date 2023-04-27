@@ -10,6 +10,8 @@ pygame.init()
 def main():
     g = GameOfLife(render_type=RenderType.PYGAME)
 
+    g.place(GliderGun().shift_to_origin().rotate_ccw().shift_to_origin())
+
     screen = pygame.display.set_mode((1280, 720))
     clock = pygame.time.Clock()
     running = True

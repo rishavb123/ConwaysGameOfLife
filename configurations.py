@@ -65,12 +65,12 @@ class Configuration:
         self.shift(loc=(-min_x, -min_y))
         return self
     
-    def rotate_right(self):
+    def rotate_cw(self):
         self.alive_cells = set((-cell[1], cell[0]) for cell in self.alive_cells)
         return self
     
-    def rotate_left(self):
-        return self.rotate_right().rotate_right().rotate_right()
+    def rotate_ccw(self):
+        return self.rotate_cw().rotate_cw().rotate_cw()
 
     def copy(self):
         c = self.__class__()
