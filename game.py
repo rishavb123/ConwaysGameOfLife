@@ -1,8 +1,8 @@
-from configurations import Configuration
+from configurations import Configuration, RenderType
 
 class GameOfLife(Configuration):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, render_type=RenderType.PRINT_STATE):
+        super().__init__(render_type)
 
     def get_neighbors(self, pos):
         x, y = pos
