@@ -83,3 +83,13 @@ def Glider():
             (1, 0), (2, 1)
         ])
     }
+
+@CompoundGOL_Object
+def SpaceShip():
+    return {
+        (0, 1): VBar,
+        (1, 3): HBar,
+        (0, 0): GOL_Object([
+            (1, 0), (4, 0), (4, 2)
+        ])
+    }
