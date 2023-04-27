@@ -13,7 +13,7 @@ def main():
     args = make_parser().parse_args()
 
     fname = args.file_name
-    oname = args.object_name.title()
+    oname = args.object_name
 
     c = Configuration()
     c.load(fname)
@@ -27,8 +27,7 @@ def main():
 def {oname}():
     return [
         {arr}
-    ]
-"""
+    ]"""
         f.write(s)
         
 
