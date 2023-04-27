@@ -71,9 +71,11 @@ def main():
             ox += 100 * dt
 
         if keys[pygame.K_r]:
-            tick_period -= 0.1 * dt
+            df = 1.5 * dt
+            tick_period = tick_period / (1 + df * tick_period)
         if keys[pygame.K_e]:
-            tick_period += 0.1 * dt
+            df = -1.5 * dt
+            tick_period = tick_period / (1 + df * tick_period)
 
         w = screen.get_width()
         h = screen.get_height()
