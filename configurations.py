@@ -20,6 +20,8 @@ class Configuration:
         return pos in self.alive_cells
 
     def place(self, config, loc=(0, 0)):
+        if type(config) == function:
+            config = config()
         self.set_cells([(cell[0] + loc[0], cell[1] + loc[1]) for cell in config.alive_cells])
 
     def render(self):
