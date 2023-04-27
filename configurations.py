@@ -8,42 +8,61 @@ class RenderType(Enum):
 
 class Configuration:
 
-    def __init__(self, render_type=RenderType.PRINT_STATE):
-        self.alive_cells = set()
+    def __init__(self, alive_cells=None, render_type=RenderType.PRINT_STATE):
+        self.alive_cells = set(alive_cells if alive_cells is not None else ())
         self.set_render_type(render_type)
 
     def set_cell(self, pos):
         self.alive_cells.add(pos)
+        return self
 
     def clear_cell(self, pos):
         if pos in self.alive_cells:
             self.alive_cells.remove(pos)
+            return self
 
     def set_cells(self, pos_arr):
         [self.set_cell(pos) for pos in pos_arr]
+        return self
 
     def clear_cells(self, pos_arr):
         [self.clear_cell(pos) for pos in pos_arr]
+        return self
 
     def flip_cell(self, pos):
         if pos in self.alive_cells:
             self.alive_cells.remove(pos)
         else:
             self.alive_cells.add(pos)
+            return self
 
     def flip_cells(self, pos_arr):
         [self.flip_cell(pos) for pos in pos_arr]
+        return self
 
     def is_set(self, pos):
         return pos in self.alive_cells
 
     def set_render_type(self, render_type):
         self.render_type = render_type
+        return self
 
     def place(self, config, loc=(0, 0)):
         if callable(config):
             config = config()
         self.set_cells([(cell[0] + loc[0], cell[1] + loc[1]) for cell in config.alive_cells])
+        return self
+
+    def shift(self, loc=(0, 0)):
+        c = self.__class__()
+        c.set_cells([(cell[0] + loc[0], cell[1] + loc[1]) for cell in self.alive_cells])
+        self.alive_cells = c.alive_cells
+        return self
+
+    def copy(self):
+        c = self.__class__()
+        c.alive_cells = self.alive_cells.copy()
+        return c
 
     def render(self, **kwargs):
         if self.render_type == RenderType.PRINT_STATE:
@@ -73,10 +92,14 @@ class Configuration:
 
     def save(self, fname):
         with open(fname, "wb") as f:
-            pickle.dump(self.alive_cells, f)
+            min_x = min(self.alive_cells, key=lambda x: x[0])[0]
+            min_y = min(self.alive_cells, key=lambda y: y[1])[1]
+            shifted = self.copy().shift(loc=(-min_x, -min_y))
+            pickle.dump(shifted.alive_cells, f)
         return self
 
-    def load(self, fname):
+    def load(self, fname, loc=(0, 0)):
         with open(fname, "rb") as f:
-            self.alive_cells = pickle.load(f)
+            alive_cells = Configuration(pickle.load(f))
+            self.place(alive_cells, loc=loc)
         return self
