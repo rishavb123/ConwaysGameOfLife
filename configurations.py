@@ -33,6 +33,10 @@ class Configuration:
         with open(fname, "wb") as f:
             pickle.dump(self.alive_cells, f)
     
-    def load(self, fname):
+    @classmethod
+    def load(cls, fname):
+        print(type(cls), type)
         with open(fname, "rb") as f:
-            self.alive_cells = pickle.load(f)
+            c = cls()
+            c.alive_cells = pickle.load(f)
+        return c
