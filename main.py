@@ -1,10 +1,10 @@
 from game import GameOfLife
-
+from objects import *
 
 def main():
     g = GameOfLife()
 
-    g.set_cells([(0, 0), (0, 1), (0, -1)])
+    g.place(Glider)
 
     g.render()
 
