@@ -10,7 +10,8 @@ pygame.init()
 def main():
     g = GameOfLife(render_type=RenderType.PYGAME)
 
-    g.load("./configs/cat.pkl")
+    # g.load("./configs/cat.pkl")
+    g.place(Glider)
 
     screen = pygame.display.set_mode((1280, 720))
     clock = pygame.time.Clock()
