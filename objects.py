@@ -27,6 +27,39 @@ def Box():
     ]
 
 @GOL_Object
+def Boat():
+    return [
+        (0, 0),
+        (0, 1),
+        (1, 0),
+        (1, 2),
+        (2, 1)
+    ]
+
+@GOL_Object
+def Loaf():
+    return [
+        (1, 0),
+        (2, 0),
+        (0, 1),
+        (0, 2),
+        (1, 3),
+        (2, 2),
+        (3, 1),
+    ]
+
+@GOL_Object
+def Ship():
+    return [
+        (0, 0),
+        (1, 0),
+        (0, 1),
+        (2, 1),
+        (2, 2),
+        (1, 2)
+    ]
+
+@GOL_Object
 def HBar():
     return [
         (0, 0),
