@@ -64,6 +64,13 @@ class Configuration:
         min_y = min(self.alive_cells, key=lambda y: y[1])[1]
         self.shift(loc=(-min_x, -min_y))
         return self
+    
+    def rotate_right(self):
+        self.alive_cells = set((-cell[1], cell[0]) for cell in self.alive_cells)
+        return self
+    
+    def rotate_left(self):
+        return self.rotate_right().rotate_right().rotate_right()
 
     def copy(self):
         c = self.__class__()
