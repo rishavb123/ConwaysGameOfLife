@@ -1,6 +1,7 @@
 # Conway's Game of Life Simulator
 
 Run with `python main.py`. Within the pygame window use these controls:
+- Click to flip a cell
 - WASD to move the "camera"
 - UP to zoom in
 - DOWN to zoom out
