@@ -6,6 +6,7 @@ import numpy as np
 import time
 
 pygame.init()
+pygame.font.init()
 
 def initialize_game_dev(g: GameOfLife):
     g.clear()
@@ -31,12 +32,17 @@ def main(initialize_game=initialize_game_dev):
     tick_period = 1 / tick_freq
 
     ticking = False
+    show_debug = False
 
     ox, oy = screen.get_width() / 2, screen.get_height() / 2
 
     NUM_CELLS_X = 100
     cell_size = 1280 / NUM_CELLS_X
     GRID_COLOR = '#222222'
+    TEXT_COLOR = '#00ff00'
+    FONT_SIZE = 20
+
+    font = pygame.font.SysFont('Courier New', FONT_SIZE, bold=True)
 
     kwargs = dict(
         screen=screen, color='white', bg_color='black', pygame=pygame, grid_color=GRID_COLOR
@@ -52,6 +58,7 @@ def main(initialize_game=initialize_game_dev):
         pygame.K_g: False,
         pygame.K_KP_ENTER: False,
         pygame.K_KP_PLUS: False,
+        pygame.K_f: False,
     }
     clicked = {
         **old_pressed
@@ -108,6 +115,8 @@ def main(initialize_game=initialize_game_dev):
             ticking = False
         if clicked[pygame.K_g]:
             kwargs["grid_color"] = GRID_COLOR if kwargs["grid_color"] is None else None
+        if clicked[pygame.K_f]:
+            show_debug = not show_debug
 
         w = screen.get_width()
         h = screen.get_height()
@@ -147,6 +156,28 @@ def main(initialize_game=initialize_game_dev):
             g.save(f"./configs/{int(time.time())}.pkl")
         if clicked[pygame.K_RIGHT] or clicked[pygame.K_KP_ENTER]:
             ticking = not ticking
+
+        if show_debug:
+            debug_info = {
+                'frame_rate': f"{1/dt:0.4f}",
+                'cell_size': f"{cell_size:0.2f}",
+                'origin': f"({ox:0.2f}, {oy:0.2f})",
+                'grid_color': kwargs["grid_color"],
+                'width': w,
+                'height': h,
+                'ticking': ticking,
+                'tick_freq': f"{1 / tick_period:0.4f}"
+            }
+            y = 5
+            s = "Debug Info:"
+            text_surface = font.render(s, True, TEXT_COLOR)
+            screen.blit(text_surface, dest=(5, y))
+            y += FONT_SIZE
+            for k, v in debug_info.items():
+                s = f"{k}: {v}"
+                text_surface = font.render(s, True, TEXT_COLOR)
+                screen.blit(text_surface, dest=(2 * FONT_SIZE + 5, y))
+                y += FONT_SIZE
 
         pygame.display.flip()
 
