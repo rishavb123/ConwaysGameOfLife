@@ -16,6 +16,7 @@ Run with `python main.py`. Within the pygame window use these controls:
 - R to speed up the simulation
 - C to clear the game board
 - X to reinitialize the board
+- G to turn off or on grid lines
 - Q to quit
 
 To create new configurations in the code use the following methods:

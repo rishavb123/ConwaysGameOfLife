@@ -34,8 +34,10 @@ def main(initialize_game=initialize_game_dev):
 
     NUM_CELLS_X = 100
     cell_size = 1280 / NUM_CELLS_X
+    GRID_COLOR = '#222222'
+
     kwargs = dict(
-        screen=screen, color='white', bg_color='black', pygame=pygame
+        screen=screen, color='white', bg_color='black', pygame=pygame, grid_color=GRID_COLOR
     )
 
     g.render(**kwargs)
@@ -45,6 +47,7 @@ def main(initialize_game=initialize_game_dev):
         pygame.K_RIGHT: False,
         pygame.K_c: False,
         pygame.K_x: False,
+        pygame.K_g: False
     }
     clicked = {
         **old_pressed
@@ -93,6 +96,8 @@ def main(initialize_game=initialize_game_dev):
         if clicked[pygame.K_x]:
             initialize_game(g)
             ticking = False
+        if clicked[pygame.K_g]:
+            kwargs["grid_color"] = GRID_COLOR if kwargs["grid_color"] is None else None
 
         w = screen.get_width()
         h = screen.get_height()

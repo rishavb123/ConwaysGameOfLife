@@ -1,5 +1,6 @@
 import pickle
 from enum import Enum
+import numpy as np
 
 class RenderType(Enum):
     PRINT_STATE=0
@@ -93,6 +94,7 @@ class Configuration:
             screen = kwargs["screen"]
             color = kwargs.get("color", "#000")
             bg_color = kwargs.get("bg_color", None)
+            grid_color = kwargs.get("grid_color", None)
             ox, oy = kwargs.get("origin", (0, 0))
             pygame = kwargs["pygame"]
 
@@ -112,6 +114,20 @@ class Configuration:
                 if -cell_size < sx < w and -cell_size < sy < h:
                     pygame.draw.rect(surface=screen, color=color, rect=(sx, sy, cell_size, cell_size))
 
+            if grid_color is not None:
+                start_i = int(np.floor(-ox / cell_size))
+                start_j = int(np.floor(-oy / cell_size))
+
+                end_i = int(np.floor((w - ox) / cell_size))
+                end_j = int(np.floor((h - oy) / cell_size))
+
+                for i in range(start_i, end_i + 1):
+                    sx = ox + i * cell_size
+                    pygame.draw.line(surface=screen, color=grid_color, start_pos=(sx, 0), end_pos=(sx, h))
+
+                for j in range(start_j, end_j + 1):
+                    sy = oy + j * cell_size
+                    pygame.draw.line(surface=screen, color=grid_color, start_pos=(0, sy), end_pos=(w, sy))
 
     def save(self, fname):
         with open(fname, "wb") as f:
