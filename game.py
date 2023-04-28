@@ -8,6 +8,7 @@ class GameOfLife(Configuration):
     def set_rules(self, born='3', stay='23'):
         self.born = set(int(c) for c in born)
         self.stay = set(int(c) for c in stay)
+        return super().set_rules(born=born, stay=stay)
 
     def get_neighbors(self, pos):
         x, y = pos
