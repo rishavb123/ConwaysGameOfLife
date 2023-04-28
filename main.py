@@ -12,7 +12,7 @@ def main():
 
     g.place(Eater)
 
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((1920, 1080))
     clock = pygame.time.Clock()
     running = True
     dt = 0
