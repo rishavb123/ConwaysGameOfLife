@@ -11,7 +11,9 @@ pygame.font.init()
 def initialize_game_dev(g: GameOfLife):
     g.clear()
 
-    g.load("https://copy.sh/life/examples/101.rle")
+    # g.load("https://copy.sh/life/examples/101.rle")
+    g.place(GliderGun)
+    # g.load('./configs/rendal-attic/memcell.txt')
 
     return g
 
@@ -22,30 +24,38 @@ def main(initialize_game=initialize_game_dev):
 
     initialize_game(g)
 
-    screen = pygame.display.set_mode((1920, 1080))
+    WIDTH = 1920
+    HEIGHT = 1080
+    INIT_CELL_SIZE = 19.2
+    GRID_COLOR = '#222222'
+    TEXT_COLOR = '#00ff00'
+    HOVER_ALIVE = '#cccccc'
+    HOVER_DEAD = '#333333'
+    COLOR = 'white'
+    BG_COLOR = 'black'
+    FONT_SIZE = 20
+    FONT = 'Courier New'
+    INIT_TICK_FREQ = 3
+
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
     running = True
     dt = 0
 
     ticker = 0
-    tick_freq = 3
-    tick_period = 1 / tick_freq
+    tick_period = 1 / INIT_TICK_FREQ
 
     ticking = False
     show_debug = False
 
     ox, oy = screen.get_width() / 2, screen.get_height() / 2
 
-    NUM_CELLS_X = 100
-    cell_size = 1280 / NUM_CELLS_X
-    GRID_COLOR = '#222222'
-    TEXT_COLOR = '#00ff00'
-    FONT_SIZE = 20
+    cell_size = INIT_CELL_SIZE
 
-    font = pygame.font.SysFont('Courier New', FONT_SIZE, bold=True)
+    font = pygame.font.SysFont(FONT, FONT_SIZE, bold=True)
 
     kwargs = dict(
-        screen=screen, color='white', bg_color='black', pygame=pygame, grid_color=GRID_COLOR
+        screen=screen, color=COLOR, bg_color=BG_COLOR, pygame=pygame, grid_color=GRID_COLOR
     )
 
     g.render(**kwargs)
@@ -134,7 +144,7 @@ def main(initialize_game=initialize_game_dev):
             j = int(np.floor((y - oy) / cell_size))
             sx = ox + i * cell_size
             sy = oy + j * cell_size
-            color = '#cccccc' if g.is_set((i, j)) else '#333333'
+            color = HOVER_ALIVE if g.is_set((i, j)) else HOVER_DEAD
             pygame.draw.rect(surface=screen, color=color, rect=(sx, sy, cell_size, cell_size), )
         mouse_old_pressed = mouse_pressed
 
@@ -162,7 +172,7 @@ def main(initialize_game=initialize_game_dev):
                 'frame_rate': f"{1/dt:0.4f}",
                 'cell_size': f"{cell_size:0.2f}",
                 'origin': f"({ox:0.2f}, {oy:0.2f})",
-                'grid_color': kwargs["grid_color"],
+                'grid lines': kwargs["grid_color"] is not None,
                 'width': w,
                 'height': h,
                 'ticking': ticking,
