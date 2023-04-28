@@ -7,14 +7,14 @@ import time
 
 pygame.init()
 
-def initialize_game(g: GameOfLife):
+def initialize_game_dev(g: GameOfLife):
     g.clear()
 
     g.load_from_lexicon("gourmet")
 
     return g
 
-def main(initialize_game=initialize_game):
+def main(initialize_game=initialize_game_dev):
     g = GameOfLife(render_type=RenderType.PYGAME)
 
     initialize_game(g)
