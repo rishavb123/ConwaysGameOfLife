@@ -162,7 +162,12 @@ class Configuration:
     def load(self, name, loc=(0, 0)):
         if "." not in name:
             return self.load_from_lexicon(lexicon_name=name, loc=loc)
-        ext = name.split(".")[-1]
+        splt = name.split(".")
+        if splt[0] == 'objects':
+            import objects
+            self.place(vars(objects)['.'.join(splt[1:])], loc=loc)
+            return self
+        ext = splt[-1]
         url = validators.url(name)
         if ext == 'txt':
             return self.load_from_txt(fname=name, loc=loc, url=url)
