@@ -10,7 +10,9 @@ pygame.init()
 def main():
     g = GameOfLife(render_type=RenderType.PYGAME)
 
-    g.place(GliderGun().rotate_ccw().shift_to_origin())
+    # g.place(GliderGun().rotate_cw().rotate_cw().shift_to_origin())
+    # g.place(GliderGun(), loc=(-25, -20))
+    g.load("./configs/double_glider.pkl")
 
     screen = pygame.display.set_mode((1280, 720))
     clock = pygame.time.Clock()
