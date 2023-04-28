@@ -1,5 +1,6 @@
 import argparse
 
+INITIAL_CONFIG = "objects.GliderGun"
 BORN_STR = '3'
 STAY_STR = '23'
 
@@ -31,6 +32,7 @@ SCROLL_ZOOM_SPEED = 2
 def make_parser():
     parser = argparse.ArgumentParser(description="Run the conway's game of life simulator")
 
+    parser.add_argument("--initial-config", "-ic", type=str, default=INITIAL_CONFIG, help="The initial configuration to load into the simulator.")
     parser.add_argument("--born", "-b", type=str, default=BORN_STR, help="The number of neighbors to cause a dead cell to become alive")
     parser.add_argument("--stay", "-s", type=str, default=STAY_STR, help="The number of neighbors to cause a alive cell to stay alive")
 

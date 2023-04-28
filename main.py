@@ -14,14 +14,14 @@ root.withdraw()
 pygame.init()
 pygame.font.init()
 
-def initialize_game_dev(g: GameOfLife):
-    g.clear()
-    
-    g.load('objects.GliderGun')
+def main(args):
+    def initialize_game(g: GameOfLife):
+        g.clear()
+        
+        g.load(args.initial_config)
 
-    return g
+        return g
 
-def main(args, initialize_game=initialize_game_dev):
     g = GameOfLife(render_type=RenderType.PYGAME, born=args.born, stay=args.stay)
 
     initialize_game(g)
@@ -155,7 +155,6 @@ def main(args, initialize_game=initialize_game_dev):
         if clicked[pygame.K_l]:
             if loaded_object is None:
                 answer = simpledialog.askstring(title="Load a configuration", prompt="Please specify either a file path (txt, rle, pkl), lexicon configuration name (ex: GIG), object name (ex: objects.Block), or a url to a file.")
-                root.update_idletasks()
                 if answer is not None:
                     try:
                         loaded_object = Configuration().load(answer).shift_to_origin().set_render_type(render_type=RenderType.PYGAME)
@@ -211,7 +210,9 @@ def main(args, initialize_game=initialize_game_dev):
             cell_size = new_cell_size
 
         if clicked[pygame.K_LEFT] or clicked[pygame.K_KP_PLUS]:
-            g.save(f"./configs/{int(time.time())}.pkl")
+            answer = simpledialog.askstring(title="Save the current configuration", prompt="Please specify the file name to save this configuration to. It will be saved to ./configs/{FILE NAME}.pkl.")
+            if answer is not None:
+                g.save(f"./configs/{answer}.pkl")
         if clicked[pygame.K_RIGHT] or clicked[pygame.K_KP_ENTER]:
             ticking = not ticking
 
@@ -283,4 +284,4 @@ def main(args, initialize_game=initialize_game_dev):
 
 if __name__ == "__main__":
     args = get_args(make_parser(), configs_root="./run_config")
-    main(args, initialize_game=initialize_game_dev)
+    main(args)
