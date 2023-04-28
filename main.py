@@ -43,6 +43,8 @@ def main():
     old_pressed = {
         pygame.K_LEFT: False,
         pygame.K_RIGHT: False,
+        pygame.K_c: False,
+        pygame.K_x: False,
     }
     clicked = {
         **old_pressed
@@ -85,10 +87,12 @@ def main():
             df = -1.5 * dt
             tick_period = tick_period / (1 + df * tick_period)
 
-        if keys[pygame.K_c]:
+        if clicked[pygame.K_c]:
             g.clear()
-        if keys[pygame.K_x]:
+            ticking = False
+        if clicked[pygame.K_x]:
             initialize_game(g)
+            ticking = False
 
         w = screen.get_width()
         h = screen.get_height()
