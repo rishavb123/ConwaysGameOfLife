@@ -17,6 +17,7 @@ def CompoundGOL_Object(objects):
         c.place(v, loc=k)
     return c
 
+
 @GOL_Object
 def Block():
     return [
@@ -25,6 +26,7 @@ def Block():
         (0, 1),
         (1, 1),
     ]
+
 
 @GOL_Object
 def Boat():
@@ -35,6 +37,7 @@ def Boat():
         (1, 2),
         (2, 1)
     ]
+
 
 @GOL_Object
 def Loaf():
@@ -48,6 +51,7 @@ def Loaf():
         (3, 1),
     ]
 
+
 @GOL_Object
 def Ship():
     return [
@@ -59,6 +63,20 @@ def Ship():
         (1, 2)
     ]
 
+
+@GOL_Object
+def Eater():
+    return [
+        (0, 0),
+        (0, 1),
+        (1, 0),
+        (2, 2),
+        (2, 3),
+        (2, 4),
+        (3, 4)
+    ]
+
+
 @GOL_Object
 def HBar():
     return [
@@ -66,6 +84,7 @@ def HBar():
         (1, 0),
         (2, 0)
     ]
+
 
 @GOL_Object
 def VBar():
@@ -75,6 +94,7 @@ def VBar():
         (0, 2)
     ]
 
+
 @CompoundGOL_Object
 def Glider():
     return {
@@ -83,6 +103,7 @@ def Glider():
             (1, 0), (2, 1)
         ])
     }
+
 
 @CompoundGOL_Object
 def SpaceShip():
