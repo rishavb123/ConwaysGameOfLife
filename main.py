@@ -79,6 +79,7 @@ def main(initialize_game=initialize_game_dev):
         pygame.K_KP_ENTER: False,
         pygame.K_KP_PLUS: False,
         pygame.K_f: False,
+        pygame.K_z: False,
     }
     clicked = {
         **old_pressed
@@ -210,7 +211,20 @@ def main(initialize_game=initialize_game_dev):
 
         if show_controls:
             controls = {
-                
+                "click mouse": "flip a cell",
+                "hold wasd": "move the camera",
+                "hold up / mousewheel up": "zoom in",
+                "hold down / mousewheel down": "zoom out",
+                "click right / enter": "play/pause the simulation",
+                "click left / PLUS": "save the configuration to file",
+                "hold e": "slow simulation tick frequency",
+                "hold r": "speed up simulation tick frequency",
+                "click c": "clear game board",
+                "click x": "reinitialize game board",
+                "click g": "toggle grid lines",
+                "click f": "show debug info",
+                "click z": "show these controls",
+                "click q": "quit"
             }
             y = h - 5 - FONT_SIZE
             for k, v in reversed(controls.items()):

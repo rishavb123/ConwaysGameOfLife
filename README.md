@@ -24,7 +24,10 @@ Run with `python main.py`. Within the pygame window use these controls:
 - X to reinitialize the board
 - G to turn off or on grid lines
 - F to show debug info
+- Z to show controls
 - Q to quit
+
+These controls can be viewed in game by clicking the z key.
 
 To create new configurations in the code use the following methods:
 - load_from_pkl(fname, loc=(0, 0)) will load a configuration from a pkl file (see the configs/*.pkl files) and place it in the specified location (by default 0, 0).
