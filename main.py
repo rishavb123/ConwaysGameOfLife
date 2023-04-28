@@ -14,6 +14,8 @@ def initialize_game_dev(g: GameOfLife):
 
     return g
 
+# TODO: add argparser
+
 def main(initialize_game=initialize_game_dev):
     g = GameOfLife(render_type=RenderType.PYGAME)
 
@@ -47,7 +49,9 @@ def main(initialize_game=initialize_game_dev):
         pygame.K_RIGHT: False,
         pygame.K_c: False,
         pygame.K_x: False,
-        pygame.K_g: False
+        pygame.K_g: False,
+        pygame.K_KP_ENTER: False,
+        pygame.K_KP_PLUS: False,
     }
     clicked = {
         **old_pressed
@@ -59,6 +63,12 @@ def main(initialize_game=initialize_game_dev):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEWHEEL:
+                inc = 2 * event.y
+                new_cell_size = cell_size + inc
+                ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
+                oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
+                cell_size = new_cell_size
 
         if ticker > tick_period and ticking:
             g.tick()
@@ -133,9 +143,9 @@ def main(initialize_game=initialize_game_dev):
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
             cell_size = new_cell_size
 
-        if clicked[pygame.K_LEFT]:
+        if clicked[pygame.K_LEFT] or clicked[pygame.K_KP_PLUS]:
             g.save(f"./configs/{int(time.time())}.pkl")
-        if clicked[pygame.K_RIGHT]:
+        if clicked[pygame.K_RIGHT] or clicked[pygame.K_KP_ENTER]:
             ticking = not ticking
 
         pygame.display.flip()

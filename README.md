@@ -14,10 +14,10 @@ Dependencies:
 Run with `python main.py`. Within the pygame window use these controls:
 - Click to flip a cell
 - WASD to move the "camera"
-- UP to zoom in
-- DOWN to zoom out
-- RIGHT arrow key to play/pause the simulation
-- LEFT arrow key to save the configuration to a file named by the timestamp
+- UP (or MOUSEWHEEL) to zoom in
+- DOWN (or MOUSEWHEEL) to zoom out
+- RIGHT (or ENTER) arrow key to play/pause the simulation
+- LEFT (or PLUS) arrow key to save the configuration to a file named by the timestamp
 - E to slow down the simulation
 - R to speed up the simulation
 - C to clear the game board
