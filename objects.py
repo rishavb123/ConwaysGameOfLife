@@ -18,7 +18,7 @@ def CompoundGOL_Object(objects):
     return c
 
 @GOL_Object
-def Box():
+def Block():
     return [
         (0, 0),
         (1, 0),
