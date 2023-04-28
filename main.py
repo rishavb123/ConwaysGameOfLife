@@ -10,11 +10,11 @@ pygame.init()
 def initialize_game(g: GameOfLife):
     g.clear()
 
-    g.load_from_lexicon("Gosper glider gun")
+    g.load_from_lexicon("gourmet")
 
     return g
 
-def main():
+def main(initialize_game=initialize_game):
     g = GameOfLife(render_type=RenderType.PYGAME)
 
     initialize_game(g)
