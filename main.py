@@ -48,8 +48,13 @@ def main(initialize_game=initialize_game_dev):
     BG_COLOR = 'black'
     FONT_SIZE = 20
     FONT = 'Courier New'
+    TEXT_PADDING = 5
     INIT_TICK_FREQ = 3
     MAX_FRAME_RATE = 60
+    CAMERA_SPEED = 200
+    FREQ_SPEED = 1.5
+    ZOOM_SPEED = 10
+    SCROLL_ZOOM_SPEED = 2
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_icon(pygame.image.load('./res/icon.png'))
@@ -110,7 +115,7 @@ def main(initialize_game=initialize_game_dev):
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEWHEEL:
-                inc = 2 * event.y
+                inc = SCROLL_ZOOM_SPEED * event.y
                 new_cell_size = cell_size + inc
                 ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
                 oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
@@ -148,19 +153,19 @@ def main(initialize_game=initialize_game_dev):
             running = False
         
         if keys[pygame.K_w]:
-            oy += 200 * dt
+            oy += CAMERA_SPEED * dt
         if keys[pygame.K_s]:
-            oy -= 200 * dt
+            oy -= CAMERA_SPEED * dt
         if keys[pygame.K_d]:
-            ox -= 200 * dt
+            ox -= CAMERA_SPEED * dt
         if keys[pygame.K_a]:
-            ox += 200 * dt
+            ox += CAMERA_SPEED * dt
 
         if keys[pygame.K_r]:
-            df = 1.5 * dt
+            df = FREQ_SPEED * dt
             tick_period = tick_period / (1 + df * tick_period)
         if keys[pygame.K_e]:
-            df = -1.5 * dt
+            df = -FREQ_SPEED * dt
             tick_period = tick_period / (1 + df * tick_period)
 
         if clicked[pygame.K_c]:
@@ -220,14 +225,14 @@ def main(initialize_game=initialize_game_dev):
             loaded_object.render(screen=screen, color=HOVER_DEAD, bg_color=None, pygame=pygame, origin=(sx, sy), cell_size=cell_size)
 
         if keys[pygame.K_UP]:
-            inc = 10 * dt
+            inc = ZOOM_SPEED * dt
             new_cell_size = cell_size + inc
             ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
             cell_size = new_cell_size
 
         if keys[pygame.K_DOWN]:
-            inc = -10 * dt
+            inc = -ZOOM_SPEED * dt
             new_cell_size = cell_size + inc
             ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
@@ -286,15 +291,15 @@ def main(initialize_game=initialize_game_dev):
                 "click Z": "show these controls",
                 "click Q": "quit"
             }
-            y = h - 5 - FONT_SIZE
+            y = h - TEXT_PADDING - FONT_SIZE
             for k, v in reversed(controls.items()):
                 s = f"{k}: {v}"
                 text_surface = font.render(s, True, CONTROLS_COLOR)
-                screen.blit(text_surface, dest=(2 * FONT_SIZE + 5, y))
+                screen.blit(text_surface, dest=(2 * FONT_SIZE + TEXT_PADDING, y))
                 y -= FONT_SIZE
             s = "Controls:"
             text_surface = font.render(s, True, CONTROLS_COLOR)
-            screen.blit(text_surface, dest=(5, y))
+            screen.blit(text_surface, dest=(TEXT_PADDING, y))
 
         pygame.display.flip()
 
