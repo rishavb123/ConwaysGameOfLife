@@ -87,6 +87,14 @@ class Configuration:
     
     def rotate_ccw(self):
         return self.rotate_cw().rotate_cw().rotate_cw()
+    
+    def flip_x(self):
+        self.alive_cells = set((-cell[0], cell[1]) for cell in self.alive_cells)
+        return self
+    
+    def flip_y(self):
+        self.alive_cells = set((cell[0], -cell[1]) for cell in self.alive_cells)
+        return self
 
     def copy(self):
         c = self.__class__()
