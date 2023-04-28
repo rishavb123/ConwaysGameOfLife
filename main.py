@@ -71,6 +71,8 @@ def main(args):
         pygame.K_j: False,
         pygame.K_o: False,
         pygame.K_i: False,
+        pygame.K_SPACE: False,
+        pygame.K_v: False,
     }
     clicked = {
         **old_pressed
@@ -161,6 +163,11 @@ def main(args):
             else:
                 loaded_object = None
 
+        if clicked[pygame.K_v] or clicked[pygame.K_SPACE]:
+            generation += 1
+            g.tick()
+            ticker = 0
+
         mx, my = pygame.mouse.get_pos()
         mi = int(np.floor((mx - ox) / cell_size))
         mj = int(np.floor((my - oy) / cell_size))
@@ -247,6 +254,7 @@ def main(args):
                 "hold WASD": "move the camera",
                 "hold UP / MouseWheel UP": "zoom in",
                 "hold DOWN / MouseWheel DOWN": "zoom out",
+                "click SPACE / V": "manually tick the simulation",
                 "click RIGHT / ENTER": "play/pause the simulation",
                 "click LEFT / PLUS": "save the configuration to file",
                 "hold E": "slow simulation tick frequency",

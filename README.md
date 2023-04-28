@@ -21,6 +21,7 @@ Within the pygame window use these controls:
 - WASD to move the "camera"
 - UP (or MOUSEWHEEL) to zoom in
 - DOWN (or MOUSEWHEEL) to zoom out
+- SPACE (or V) to manually tick the simulation
 - RIGHT (or ENTER) arrow key to play/pause the simulation
 - LEFT (or PLUS) arrow key to save the configuration to a file
 - E to slow down the simulation
