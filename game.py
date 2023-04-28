@@ -1,11 +1,11 @@
 from configurations import Configuration, RenderType
 
 class GameOfLife(Configuration):
-    def __init__(self, alive_cells=None, render_type=RenderType.PRINT_STATE, rule_str="b3/s23"):
+    def __init__(self, alive_cells=None, render_type=RenderType.PRINT_STATE, stay_set=[2, 3], born_set=[3]):
         super().__init__(alive_cells=alive_cells, render_type=render_type)
 
-        self.born = set([int(c) for c in rule_str.split("/")[0][1:]])
-        self.stay = set([int(c) for c in rule_str.split("/")[1][1:]])
+        self.born = set(born_set)
+        self.stay = set(stay_set)
 
     def get_neighbors(self, pos):
         x, y = pos
