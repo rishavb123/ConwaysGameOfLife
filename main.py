@@ -63,13 +63,13 @@ def main():
             running = False
         
         if keys[pygame.K_w]:
-            oy += 100 * dt
+            oy += 200 * dt
         if keys[pygame.K_s]:
-            oy -= 100 * dt
+            oy -= 200 * dt
         if keys[pygame.K_d]:
-            ox -= 100 * dt
+            ox -= 200 * dt
         if keys[pygame.K_a]:
-            ox += 100 * dt
+            ox += 200 * dt
 
         if keys[pygame.K_r]:
             df = 1.5 * dt
