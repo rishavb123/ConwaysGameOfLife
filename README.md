@@ -3,7 +3,6 @@
 Dependencies:
 - pygame
 - numpy
-- readlif
 
 Run with `python main.py`. Within the pygame window use these controls:
 - Click to flip a cell
