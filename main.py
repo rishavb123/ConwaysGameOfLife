@@ -37,7 +37,7 @@ def main(initialize_game=initialize_game_dev):
 
     WIDTH = 1920
     HEIGHT = 1080
-    INIT_CELL_SIZE = 19.2
+    INIT_CELL_SIZE = 20
     GRID_COLOR = '#222222'
     DEBUG_COLOR = '#00ff00'
     CONTROLS_COLOR = '#ff00ff'
@@ -128,11 +128,14 @@ def main(initialize_game=initialize_game_dev):
             end_i = int(np.floor((w - ox) / cell_size))
             end_j = int(np.floor((h - oy) / cell_size))
 
-            for i in range(start_i, end_i + 1):
+            cell_thresh = 10
+            grid_step = 1 if cell_size > cell_thresh else int(cell_thresh + 1 - cell_size)
+
+            for i in range(start_i, end_i + 1, grid_step):
                 sx = ox + i * cell_size
                 pygame.draw.line(surface=screen, color=grid_color, start_pos=(sx, 0), end_pos=(sx, h))
 
-            for j in range(start_j, end_j + 1):
+            for j in range(start_j, end_j + 1, grid_step):
                 sy = oy + j * cell_size
                 pygame.draw.line(surface=screen, color=grid_color, start_pos=(0, sy), end_pos=(w, sy))
 
