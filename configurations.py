@@ -156,8 +156,8 @@ class Configuration:
             self.place(c, loc=loc)
         return self
     
-    def load_from_lexicon(self, lexicon_name, loc=(0, 0)):
-        with open("./lexicon/lexicon.txt") as f:
+    def load_from_lexicon(self, lexicon_name, loc=(0, 0), lexicon_path="./configs/lexicon/lexicon.txt"):
+        with open(lexicon_path) as f:
             found = False
             y = -1
             c = Configuration()
