@@ -1,8 +1,11 @@
 from configurations import Configuration, RenderType
 
 class GameOfLife(Configuration):
-    def __init__(self, alive_cells=None, render_type=RenderType.PRINT_STATE):
+    def __init__(self, alive_cells=None, render_type=RenderType.PRINT_STATE, rule_str="b3/s23"):
         super().__init__(alive_cells=alive_cells, render_type=render_type)
+
+        self.born = set([int(c) for c in rule_str.split("/")[0][1:]])
+        self.stay = set([int(c) for c in rule_str.split("/")[1][1:]])
 
     def get_neighbors(self, pos):
         x, y = pos
@@ -33,10 +36,10 @@ class GameOfLife(Configuration):
             alive = self.is_set(cell)
 
             if alive:
-                if cnt != 2 and cnt != 3:
+                if cnt not in self.stay:
                     cells_to_clear.append(cell)
             else:
-                if cnt == 3:
+                if cnt in self.born:
                     cells_to_set.append(cell)
 
         self.clear_cells(cells_to_clear)
