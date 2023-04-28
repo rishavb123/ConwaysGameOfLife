@@ -51,6 +51,8 @@ def main(initialize_game=initialize_game_dev):
     MAX_FRAME_RATE = 60
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_icon(pygame.image.load('./res/icon.png'))
+    pygame.display.set_caption("Conway's Game of Life")
     clock = pygame.time.Clock()
     running = True
     dt = 0
