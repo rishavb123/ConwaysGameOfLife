@@ -27,6 +27,10 @@ class Configuration:
     def clear_cells(self, pos_arr):
         [self.clear_cell(pos) for pos in pos_arr]
         return self
+    
+    def clear(self):
+        self.alive_cells.clear()
+        return self
 
     def flip_cell(self, pos):
         if pos in self.alive_cells:

@@ -7,10 +7,17 @@ import time
 
 pygame.init()
 
+def initialize_game(g: GameOfLife):
+    g.clear()
+
+    g.load_from_lexicon("Gosper glider gun")
+
+    return g
+
 def main():
     g = GameOfLife(render_type=RenderType.PYGAME)
 
-    g.place(Eater)
+    initialize_game(g)
 
     screen = pygame.display.set_mode((1920, 1080))
     clock = pygame.time.Clock()
@@ -79,7 +86,9 @@ def main():
             tick_period = tick_period / (1 + df * tick_period)
 
         if keys[pygame.K_c]:
-            g.alive_cells = set()
+            g.clear()
+        if keys[pygame.K_x]:
+            initialize_game(g)
 
         w = screen.get_width()
         h = screen.get_height()
