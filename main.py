@@ -40,6 +40,7 @@ def main(args):
     show_controls = False
     grid_color = args.grid_color
     loaded_object = None
+    just_clicked_at = None
 
     w = screen.get_width()
     h = screen.get_height()
@@ -172,8 +173,12 @@ def main(args):
         mi = int(np.floor((mx - ox) / cell_size))
         mj = int(np.floor((my - oy) / cell_size))
 
+        if just_clicked_at is not None and (mi, mj) != just_clicked_at:
+            just_clicked_at = None
+
         mouse_pressed = pygame.mouse.get_pressed()[0]
         if not mouse_old_pressed and mouse_pressed:
+            just_clicked_at = (mi, mj)
             if loaded_object is None:
                 g.flip_cell((mi, mj))
             else:
@@ -198,7 +203,9 @@ def main(args):
                 if clicked[pygame.K_i]:
                     loaded_object.rotate_ccw()
                 loaded_object.shift_to_origin()
-            loaded_object.render(screen=screen, color=args.hover_dead_color, bg_color=None, pygame=pygame, origin=(sx, sy), cell_size=cell_size)
+            if just_clicked_at is None:
+                loaded_object.render(screen=screen, color=args.hover_dead_color, bg_color=None, pygame=pygame, origin=(sx, sy), cell_size=cell_size)
+                
 
         if keys[pygame.K_UP]:
             inc = args.zoom_speed * dt
