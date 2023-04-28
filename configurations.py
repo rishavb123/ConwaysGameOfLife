@@ -125,12 +125,14 @@ class Configuration:
                     if line.lower().startswith(f":{lexicon_name.lower()}:"):
                         found = True
                 else:
-                    if line.startswith(":"):
-                        break
                     if y < 0:
+                        if line.startswith(":"):
+                            break
                         if line.startswith("\t"):
                             y = 0
                     if y >= 0:
+                        if not line.startswith("\t"):
+                            break
                         for x in range(len(line)):
                             if line[x] == '*':
                                 c.set_cell((x, y))
