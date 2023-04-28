@@ -11,8 +11,12 @@ Dependencies:
 - validators
 - urllib
 - tkinter
+- PyYaml
 
-Run with `python main.py`. Within the pygame window use these controls:
+Run with `python main.py`. Run `python main.py -h` to see the runtime configurations that can be used through command line arguments or a yml or json file in the run_config folder to specify runtime parameters.
+
+
+Within the pygame window use these controls:
 - Click to flip a cell
 - WASD to move the "camera"
 - UP (or MOUSEWHEEL) to zoom in

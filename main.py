@@ -4,6 +4,8 @@ import pygame
 import numpy as np
 import tkinter as tk
 from tkinter import simpledialog
+from args_util import get_args
+from args import make_parser
 
 import time
 
@@ -14,49 +16,17 @@ pygame.font.init()
 
 def initialize_game_dev(g: GameOfLife):
     g.clear()
-
-    # g.load("https://copy.sh/life/examples/101.rle")
     
-    # g.place(GliderGun(), loc=(0, 0))
-    # g.place(GliderGun().flip_over_x(), loc=(0, 30))
-
     g.load('objects.GliderGun')
-
-    # g.load('./configs/rendal-attic/memcell.txt')
-
-    # g.load('./configs/saved/double_glider.pkl')
 
     return g
 
-# TODO: add argparser
-
-def main(initialize_game=initialize_game_dev):
-    g = GameOfLife(render_type=RenderType.PYGAME)
+def main(args, initialize_game=initialize_game_dev):
+    g = GameOfLife(render_type=RenderType.PYGAME, born=args.born, stay=args.stay)
 
     initialize_game(g)
 
-    WIDTH = 1920
-    HEIGHT = 1080
-    INIT_CELL_SIZE = 20
-    GRID_CELL_THRESH = 10
-    GRID_COLOR = '#222222'
-    DEBUG_COLOR = '#00ff00'
-    CONTROLS_COLOR = '#ff00ff'
-    HOVER_ALIVE = '#cccccc'
-    HOVER_DEAD = '#333333'
-    COLOR = 'white'
-    BG_COLOR = 'black'
-    FONT_SIZE = 20
-    FONT = 'Courier New'
-    TEXT_PADDING = 5
-    INIT_TICK_FREQ = 3
-    MAX_FRAME_RATE = 60
-    CAMERA_SPEED = 200
-    FREQ_SPEED = 1.5
-    ZOOM_SPEED = 10
-    SCROLL_ZOOM_SPEED = 2
-
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((args.width, args.height))
     pygame.display.set_icon(pygame.image.load('./res/icon.png'))
     pygame.display.set_caption("Conway's Game of Life")
     clock = pygame.time.Clock()
@@ -65,12 +35,12 @@ def main(initialize_game=initialize_game_dev):
     generation = 0
 
     ticker = 0
-    tick_period = 1 / INIT_TICK_FREQ
+    tick_period = 1 / args.init_tick_frequency
 
     ticking = False
     show_debug = False
     show_controls = False
-    grid_color = GRID_COLOR
+    grid_color = args.grid_color
     loaded_object = None
 
     w = screen.get_width()
@@ -78,12 +48,12 @@ def main(initialize_game=initialize_game_dev):
 
     ox, oy = w / 2, h / 2
 
-    cell_size = INIT_CELL_SIZE
+    cell_size = args.init_cell_size
 
-    font = pygame.font.SysFont(FONT, FONT_SIZE, bold=True)
+    font = pygame.font.SysFont(args.font, args.font_size, bold=True)
 
     kwargs = dict(
-        screen=screen, color=COLOR, bg_color=BG_COLOR, pygame=pygame
+        screen=screen, color=args.cell_color, bg_color=args.bg_color, pygame=pygame
     )
 
     g.render(**kwargs)
@@ -115,7 +85,7 @@ def main(initialize_game=initialize_game_dev):
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEWHEEL:
-                inc = SCROLL_ZOOM_SPEED * event.y
+                inc = args.scroll_zoom_speed * event.y
                 new_cell_size = cell_size + inc
                 ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
                 oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
@@ -134,7 +104,7 @@ def main(initialize_game=initialize_game_dev):
             end_i = int(np.floor((w - ox) / cell_size))
             end_j = int(np.floor((h - oy) / cell_size))
 
-            grid_step = 1 if cell_size > GRID_CELL_THRESH else int(GRID_CELL_THRESH + 1 - cell_size)
+            grid_step = 1 if cell_size > args.grid_cell_thresh else int(args.grid_cell_thresh + 1 - cell_size)
 
             for i in range(start_i, end_i + 1, grid_step):
                 sx = ox + i * cell_size
@@ -153,19 +123,19 @@ def main(initialize_game=initialize_game_dev):
             running = False
         
         if keys[pygame.K_w]:
-            oy += CAMERA_SPEED * dt
+            oy += args.camera_speed * dt
         if keys[pygame.K_s]:
-            oy -= CAMERA_SPEED * dt
+            oy -= args.camera_speed * dt
         if keys[pygame.K_d]:
-            ox -= CAMERA_SPEED * dt
+            ox -= args.camera_speed * dt
         if keys[pygame.K_a]:
-            ox += CAMERA_SPEED * dt
+            ox += args.camera_speed * dt
 
         if keys[pygame.K_r]:
-            df = FREQ_SPEED * dt
+            df = args.freq_speed * dt
             tick_period = tick_period / (1 + df * tick_period)
         if keys[pygame.K_e]:
-            df = -FREQ_SPEED * dt
+            df = -args.freq_speed * dt
             tick_period = tick_period / (1 + df * tick_period)
 
         if clicked[pygame.K_c]:
@@ -177,7 +147,7 @@ def main(initialize_game=initialize_game_dev):
             ticking = False
             generation = 0
         if clicked[pygame.K_g]:
-            grid_color = GRID_COLOR if grid_color is None else None
+            grid_color = args.grid_color if grid_color is None else None
         if clicked[pygame.K_f]:
             show_debug = not show_debug
         if clicked[pygame.K_z]:
@@ -209,7 +179,7 @@ def main(initialize_game=initialize_game_dev):
         sx = ox + mi * cell_size
         sy = oy + mj * cell_size
         if loaded_object is None:
-            color = HOVER_ALIVE if g.is_set((mi, mj)) else HOVER_DEAD
+            color = args.hover_alive_color if g.is_set((mi, mj)) else args.hover_dead_color
             pygame.draw.rect(surface=screen, color=color, rect=(sx, sy, cell_size, cell_size), )
         else:
             if clicked[pygame.K_k] or clicked[pygame.K_j] or clicked[pygame.K_o] or clicked[pygame.K_i]:
@@ -222,17 +192,17 @@ def main(initialize_game=initialize_game_dev):
                 if clicked[pygame.K_i]:
                     loaded_object.rotate_ccw()
                 loaded_object.shift_to_origin()
-            loaded_object.render(screen=screen, color=HOVER_DEAD, bg_color=None, pygame=pygame, origin=(sx, sy), cell_size=cell_size)
+            loaded_object.render(screen=screen, color=args.hover_dead_color, bg_color=None, pygame=pygame, origin=(sx, sy), cell_size=cell_size)
 
         if keys[pygame.K_UP]:
-            inc = ZOOM_SPEED * dt
+            inc = args.zoom_speed * dt
             new_cell_size = cell_size + inc
             ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
             cell_size = new_cell_size
 
         if keys[pygame.K_DOWN]:
-            inc = -ZOOM_SPEED * dt
+            inc = -args.zoom_speed * dt
             new_cell_size = cell_size + inc
             ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
@@ -258,16 +228,16 @@ def main(initialize_game=initialize_game_dev):
                 'mouse_idx':  f"({mi:0.2f}, {mj:0.2f})",
                 'loaded_object': loaded_object is not None,
             }
-            y = 5
+            y = args.text_padding
             s = "Debug Info:"
-            text_surface = font.render(s, True, DEBUG_COLOR)
-            screen.blit(text_surface, dest=(5, y))
-            y += FONT_SIZE
+            text_surface = font.render(s, True, args.debug_color)
+            screen.blit(text_surface, dest=(args.text_padding, y))
+            y += args.font_size
             for k, v in debug_info.items():
                 s = f"{k}: {v}"
-                text_surface = font.render(s, True, DEBUG_COLOR)
-                screen.blit(text_surface, dest=(2 * FONT_SIZE + 5, y))
-                y += FONT_SIZE
+                text_surface = font.render(s, True, args.debug_color)
+                screen.blit(text_surface, dest=(2 * args.font_size + args.text_padding, y))
+                y += args.font_size
 
         if show_controls:
             controls = {
@@ -291,22 +261,23 @@ def main(initialize_game=initialize_game_dev):
                 "click Z": "show these controls",
                 "click Q": "quit"
             }
-            y = h - TEXT_PADDING - FONT_SIZE
+            y = h - args.text_padding - args.font_size
             for k, v in reversed(controls.items()):
                 s = f"{k}: {v}"
-                text_surface = font.render(s, True, CONTROLS_COLOR)
-                screen.blit(text_surface, dest=(2 * FONT_SIZE + TEXT_PADDING, y))
-                y -= FONT_SIZE
+                text_surface = font.render(s, True, args.controls_color)
+                screen.blit(text_surface, dest=(2 * args.font_size + args.text_padding, y))
+                y -= args.font_size
             s = "Controls:"
-            text_surface = font.render(s, True, CONTROLS_COLOR)
-            screen.blit(text_surface, dest=(TEXT_PADDING, y))
+            text_surface = font.render(s, True, args.controls_color)
+            screen.blit(text_surface, dest=(args.text_padding, y))
 
         pygame.display.flip()
 
-        dt = clock.tick(MAX_FRAME_RATE) / 1000
+        dt = clock.tick(args.framerate) / 1000
 
         if ticking:
             ticker += dt
 
 if __name__ == "__main__":
-    main()
+    args = get_args(make_parser(), configs_root="./run_config")
+    main(args, initialize_game=initialize_game_dev)
