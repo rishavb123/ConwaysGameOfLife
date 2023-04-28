@@ -10,7 +10,7 @@ pygame.init()
 def initialize_game_dev(g: GameOfLife):
     g.clear()
 
-    g.load("./rendal-attic/memcell.txt")
+    g.load("./configs/rendal-attic/memcell.txt")
 
     return g
 
