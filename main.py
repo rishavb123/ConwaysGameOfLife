@@ -2,9 +2,13 @@ from game import GameOfLife, RenderType
 from objects import *
 import pygame
 import numpy as np
+import tkinter as tk
+from tkinter import simpledialog
 
 import time
 
+root = tk.Tk()
+root.withdraw()
 pygame.init()
 pygame.font.init()
 
@@ -13,9 +17,10 @@ def initialize_game_dev(g: GameOfLife):
 
     # g.load("https://copy.sh/life/examples/101.rle")
     
-    g.place(GliderGun(), loc=(0, 0))
-    g.place(GliderGun().flip_over_x(), loc=(0, 30))
+    # g.place(GliderGun(), loc=(0, 0))
+    # g.place(GliderGun().flip_over_x(), loc=(0, 30))
 
+    g.load('objects.GliderGun')
 
     # g.load('./configs/rendal-attic/memcell.txt')
 
@@ -57,15 +62,20 @@ def main(initialize_game=initialize_game_dev):
     ticking = False
     show_debug = False
     show_controls = False
+    grid_color = GRID_COLOR
+    loaded_object = None
 
-    ox, oy = screen.get_width() / 2, screen.get_height() / 2
+    w = screen.get_width()
+    h = screen.get_height()
+
+    ox, oy = w / 2, h / 2
 
     cell_size = INIT_CELL_SIZE
 
     font = pygame.font.SysFont(FONT, FONT_SIZE, bold=True)
 
     kwargs = dict(
-        screen=screen, color=COLOR, bg_color=BG_COLOR, pygame=pygame, grid_color=GRID_COLOR
+        screen=screen, color=COLOR, bg_color=BG_COLOR, pygame=pygame
     )
 
     g.render(**kwargs)
@@ -80,6 +90,11 @@ def main(initialize_game=initialize_game_dev):
         pygame.K_KP_PLUS: False,
         pygame.K_f: False,
         pygame.K_z: False,
+        pygame.K_l: False,
+        pygame.K_k: False,
+        pygame.K_j: False,
+        pygame.K_o: False,
+        pygame.K_i: False,
     }
     clicked = {
         **old_pressed
@@ -104,6 +119,20 @@ def main(initialize_game=initialize_game_dev):
             ticker = 0
 
         g.render(**kwargs, origin=(ox, oy), cell_size=cell_size)
+        if grid_color is not None:
+            start_i = int(np.floor(-ox / cell_size))
+            start_j = int(np.floor(-oy / cell_size))
+
+            end_i = int(np.floor((w - ox) / cell_size))
+            end_j = int(np.floor((h - oy) / cell_size))
+
+            for i in range(start_i, end_i + 1):
+                sx = ox + i * cell_size
+                pygame.draw.line(surface=screen, color=grid_color, start_pos=(sx, 0), end_pos=(sx, h))
+
+            for j in range(start_j, end_j + 1):
+                sy = oy + j * cell_size
+                pygame.draw.line(surface=screen, color=grid_color, start_pos=(0, sy), end_pos=(w, sy))
 
         keys = pygame.key.get_pressed()
         for k in clicked:
@@ -138,14 +167,22 @@ def main(initialize_game=initialize_game_dev):
             ticking = False
             generation = 0
         if clicked[pygame.K_g]:
-            kwargs["grid_color"] = GRID_COLOR if kwargs["grid_color"] is None else None
+            grid_color = GRID_COLOR if grid_color is None else None
         if clicked[pygame.K_f]:
             show_debug = not show_debug
         if clicked[pygame.K_z]:
             show_controls = not show_controls
-
-        w = screen.get_width()
-        h = screen.get_height()
+        if clicked[pygame.K_l]:
+            if loaded_object is None:
+                answer = simpledialog.askstring(title="Load a configuration", prompt="Please specify either a file path (txt, rle, pkl), lexicon configuration name (ex: GIG), object name (ex: objects.Block), or a url to a file.")
+                root.update_idletasks()
+                if answer is not None:
+                    try:
+                        loaded_object = Configuration().load(answer).shift_to_origin().set_render_type(render_type=RenderType.PYGAME)
+                    except:
+                        tk.messagebox.showerror(title="Load Error", message=f"Error during loading of {answer} configuration.")
+            else:
+                loaded_object = None
 
         mx, my = pygame.mouse.get_pos()
         mi = int(np.floor((mx - ox) / cell_size))
@@ -153,17 +190,29 @@ def main(initialize_game=initialize_game_dev):
 
         mouse_pressed = pygame.mouse.get_pressed()[0]
         if not mouse_old_pressed and mouse_pressed:
-            x, y = pygame.mouse.get_pos()
-            g.flip_cell((
-                int(np.floor((x - ox) / cell_size)),
-                int(np.floor((y - oy) / cell_size)),
-            ))
-        else:
-            sx = ox + mi * cell_size
-            sy = oy + mj * cell_size
+            if loaded_object is None:
+                g.flip_cell((mi, mj))
+            else:
+                g.place(loaded_object, loc=(mi, mj))
+        mouse_old_pressed = mouse_pressed
+
+        sx = ox + mi * cell_size
+        sy = oy + mj * cell_size
+        if loaded_object is None:
             color = HOVER_ALIVE if g.is_set((mi, mj)) else HOVER_DEAD
             pygame.draw.rect(surface=screen, color=color, rect=(sx, sy, cell_size, cell_size), )
-        mouse_old_pressed = mouse_pressed
+        else:
+            if clicked[pygame.K_k] or clicked[pygame.K_j] or clicked[pygame.K_o] or clicked[pygame.K_i]:
+                if clicked[pygame.K_k]:
+                    loaded_object.flip_over_x()
+                if clicked[pygame.K_j]:
+                    loaded_object.flip_over_y()
+                if clicked[pygame.K_o]:
+                    loaded_object.rotate_cw()
+                if clicked[pygame.K_i]:
+                    loaded_object.rotate_ccw()
+                loaded_object.shift_to_origin()
+            loaded_object.render(screen=screen, color=HOVER_DEAD, bg_color=None, pygame=pygame, origin=(sx, sy), cell_size=cell_size)
 
         if keys[pygame.K_UP]:
             inc = 10 * dt
@@ -190,13 +239,14 @@ def main(initialize_game=initialize_game_dev):
                 'frame_rate': f"{1/dt:0.4f}",
                 'cell_size': f"{cell_size:0.2f}",
                 'origin': f"({ox:0.2f}, {oy:0.2f})",
-                'grid lines': kwargs["grid_color"] is not None,
+                'grid lines': grid_color is not None,
                 'width': w,
                 'height': h,
                 'ticking': ticking,
                 'tick_freq': f"{1 / tick_period:0.4f}",
                 'mouse_pos': f"({mx:0.2f}, {my:0.2f})",
                 'mouse_idx':  f"({mi:0.2f}, {mj:0.2f})",
+                'loaded_object': loaded_object is not None,
             }
             y = 5
             s = "Debug Info:"
@@ -211,20 +261,25 @@ def main(initialize_game=initialize_game_dev):
 
         if show_controls:
             controls = {
-                "click mouse": "flip a cell",
-                "hold wasd": "move the camera",
-                "hold up / mousewheel up": "zoom in",
-                "hold down / mousewheel down": "zoom out",
-                "click right / enter": "play/pause the simulation",
-                "click left / PLUS": "save the configuration to file",
-                "hold e": "slow simulation tick frequency",
-                "hold r": "speed up simulation tick frequency",
-                "click c": "clear game board",
-                "click x": "reinitialize game board",
-                "click g": "toggle grid lines",
-                "click f": "show debug info",
-                "click z": "show these controls",
-                "click q": "quit"
+                "click Mouse": "flip a cell",
+                "hold WASD": "move the camera",
+                "hold UP / MouseWheel UP": "zoom in",
+                "hold DOWN / MouseWheel DOWN": "zoom out",
+                "click RIGHT / ENTER": "play/pause the simulation",
+                "click LEFT / PLUS": "save the configuration to file",
+                "hold E": "slow simulation tick frequency",
+                "hold R": "speed up simulation tick frequency",
+                "click C": "clear game board",
+                "click X": "reinitialize game board",
+                "click L": "load  or unload a configuration",
+                "click K": "flip loaded object across the x axis",
+                "click J": "flip loaded object across the y axis",
+                "click O": "rotate loaded object cw",
+                "click I": "rotate loaded object ccw",
+                "click G": "toggle grid lines",
+                "click F": "show debug info",
+                "click Z": "show these controls",
+                "click Q": "quit"
             }
             y = h - 5 - FONT_SIZE
             for k, v in reversed(controls.items()):

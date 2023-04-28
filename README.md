@@ -10,6 +10,7 @@ Dependencies:
 - time
 - validators
 - urllib
+- tkinter
 
 Run with `python main.py`. Within the pygame window use these controls:
 - Click to flip a cell
@@ -22,6 +23,11 @@ Run with `python main.py`. Within the pygame window use these controls:
 - R to speed up the simulation
 - C to clear the game board
 - X to reinitialize the board
+- L to load or unload an object
+- K: flip loaded object across the x axis
+- J: flip loaded object across the y axis
+- O: rotate loaded object cw
+- I: rotate loaded object ccw
 - G to turn off or on grid lines
 - F to show debug info
 - Z to show controls
