@@ -50,6 +50,13 @@ class Configuration:
         self.render_type = render_type
         return self
 
+    def get_bounds(self):
+        min_x = min(self.alive_cells, key=lambda x: x[0])[0]
+        min_y = min(self.alive_cells, key=lambda y: y[1])[1]
+        max_x = max(self.alive_cells, key=lambda x: x[0])[0]
+        max_y = max(self.alive_cells, key=lambda y: y[1])[1]
+        return min_x, max_x, min_y, max_y
+
     def place(self, config, loc=(0, 0)):
         if callable(config):
             config = config()
@@ -63,8 +70,7 @@ class Configuration:
         return self
     
     def shift_to_origin(self):
-        min_x = min(self.alive_cells, key=lambda x: x[0])[0]
-        min_y = min(self.alive_cells, key=lambda y: y[1])[1]
+        min_x, _, min_y, _ = self.get_bounds()
         self.shift(loc=(-min_x, -min_y))
         return self
     
