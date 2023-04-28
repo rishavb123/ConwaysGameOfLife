@@ -7,7 +7,6 @@ Dependencies:
 - argparse
 - pickle
 - enum
-- time
 - validators
 - urllib
 - tkinter
@@ -23,7 +22,7 @@ Within the pygame window use these controls:
 - UP (or MOUSEWHEEL) to zoom in
 - DOWN (or MOUSEWHEEL) to zoom out
 - RIGHT (or ENTER) arrow key to play/pause the simulation
-- LEFT (or PLUS) arrow key to save the configuration to a file named by the timestamp
+- LEFT (or PLUS) arrow key to save the configuration to a file
 - E to slow down the simulation
 - R to speed up the simulation
 - C to clear the game board

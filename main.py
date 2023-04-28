@@ -7,8 +7,6 @@ from tkinter import simpledialog
 from args_util import get_args
 from args import make_parser
 
-import time
-
 root = tk.Tk()
 root.withdraw()
 pygame.init()
