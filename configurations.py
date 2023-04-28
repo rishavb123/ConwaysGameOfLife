@@ -111,6 +111,32 @@ class Configuration:
 
     def load(self, fname, loc=(0, 0)):
         with open(fname, "rb") as f:
-            alive_cells = Configuration(pickle.load(f))
-            self.place(alive_cells, loc=loc)
+            c = Configuration(pickle.load(f))
+            self.place(c, loc=loc)
         return self
+    
+    def load_from_lexicon(self, lexicon_name, loc=(0, 0)):
+        with open("./lexicon/lexicon.txt") as f:
+            found = False
+            y = -1
+            c = Configuration()
+            for line in f:
+                if not found:
+                    if line.lower().startswith(f":{lexicon_name.lower()}:"):
+                        found = True
+                else:
+                    if line.startswith(":"):
+                        break
+                    if y < 0:
+                        if line.startswith("\t"):
+                            y = 0
+                    if y >= 0:
+                        for x in range(len(line)):
+                            if line[x] == '*':
+                                c.set_cell((x, y))
+                        y += 1
+            if not found:
+                raise ValueError(f"The pattern {lexicon_name} was not found in the lexicon.txt file. Make sure to specify the name of something in the lexicon.")
+            if y < 0:
+                raise ValueError(f"The pattern {lexicon_name} has no pattern in the lexicon.txt file. Make sure to specify the name of something that includes a pattern image in the lexicon.")
+            self.place(c, loc=loc)

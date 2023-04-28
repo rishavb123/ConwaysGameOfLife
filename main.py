@@ -12,7 +12,8 @@ def main():
 
     # g.place(GliderGun().rotate_cw().rotate_cw().shift_to_origin())
     # g.place(GliderGun(), loc=(-25, -20))
-    g.load("./configs/double_glider.pkl")
+    # g.load("./configs/double_glider.pkl")
+    g.load_from_lexicon("gig")
 
     screen = pygame.display.set_mode((1280, 720))
     clock = pygame.time.Clock()
