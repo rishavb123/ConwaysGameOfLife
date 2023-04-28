@@ -23,6 +23,7 @@ Run with `python main.py`. Within the pygame window use these controls:
 - C to clear the game board
 - X to reinitialize the board
 - G to turn off or on grid lines
+- F to show debug info
 - Q to quit
 
 To create new configurations in the code use the following methods:
