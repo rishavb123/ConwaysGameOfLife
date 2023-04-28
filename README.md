@@ -8,6 +8,8 @@ Dependencies:
 - pickle
 - enum
 - time
+- validators
+- urllib
 
 Run with `python main.py`. Within the pygame window use these controls:
 - Click to flip a cell

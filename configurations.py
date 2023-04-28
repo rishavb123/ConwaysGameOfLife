@@ -2,6 +2,9 @@ import pickle
 from enum import Enum
 import numpy as np
 import re
+import urllib.request
+import validators
+
 
 class RenderType(Enum):
     PRINT_STATE=0
@@ -147,27 +150,32 @@ class Configuration:
             pickle.dump(shifted.alive_cells, f)
         return self
     
+    @staticmethod
+    def get_open(url=False):
+        return urllib.request.urlopen if url else open
+    
     def load(self, name, loc=(0, 0)):
         if "." not in name:
             return self.load_from_lexicon(lexicon_name=name, loc=loc)
         ext = name.split(".")[-1]
+        url = validators.url(name)
         if ext == 'txt':
-            return self.load_from_txt(fname=name, loc=loc)
+            return self.load_from_txt(fname=name, loc=loc, url=url)
         elif ext == 'pkl':
-            return self.load_from_pkl(fname=name, loc=loc)
+            return self.load_from_pkl(fname=name, loc=loc, url=url)
         elif ext == 'rle':
-            return self.load_from_rle(fname=name, loc=loc)
+            return self.load_from_rle(fname=name, loc=loc, url=url)
         else:
             return self.load_from_lexicon(lexicon_name=name, loc=loc)
 
-    def load_from_pkl(self, fname, loc=(0, 0)):
-        with open(fname, "rb") as f:
+    def load_from_pkl(self, fname, loc=(0, 0), url=False):
+        with Configuration.get_open(url)(fname, "rb") as f:
             c = Configuration(pickle.load(f))
             self.place(c, loc=loc)
         return self
     
-    def load_from_lexicon(self, lexicon_name, loc=(0, 0), lexicon_path="./configs/lexicon/lexicon.txt"):
-        with open(lexicon_path) as f:
+    def load_from_lexicon(self, lexicon_name, loc=(0, 0), lexicon_path="./configs/lexicon/lexicon.txt", url=False):
+        with Configuration.get_open(url)(lexicon_path) as f:
             found = False
             y = -1
             c = Configuration()
@@ -195,8 +203,8 @@ class Configuration:
             self.place(c, loc=loc)
         return self
 
-    def load_from_txt(self, fname, loc=(0, 0)):
-        with open(fname) as f:
+    def load_from_txt(self, fname, loc=(0, 0), url=False):
+        with Configuration.get_open(url)(fname) as f:
             y = 0
             c = Configuration()
             for line in f:
@@ -209,9 +217,10 @@ class Configuration:
             self.place(c, loc=loc)
         return self
     
-    def load_from_rle(self, fname, loc=(0, 0)):
-        with open(fname) as f:
+    def load_from_rle(self, fname, loc=(0, 0), url=False):
+        with Configuration.get_open(url)(fname) as f:
             lines = f.readlines()
+        lines = [line.decode() if type(line) == bytes else line for line in lines]
         lines = [line.strip() for line in lines]
         lines = [line for line in lines if len(line) == 0 or line[0] != '#']
         header = lines[0].lower()

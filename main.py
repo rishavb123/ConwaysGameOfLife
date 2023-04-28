@@ -10,7 +10,7 @@ pygame.init()
 def initialize_game_dev(g: GameOfLife):
     g.clear()
 
-    g.load("./configs/rendal-attic/inout.rle")
+    g.load("https://copy.sh/life/examples/101.rle")
 
     return g
 
