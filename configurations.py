@@ -50,9 +50,8 @@ class Configuration:
 
     def is_set(self, pos):
         return pos in self.alive_cells
-
-    def set_render_type(self, render_type):
-        self.render_type = render_type
+    
+    def set_rules(self, born='3', stay='23'):
         return self
 
     def get_bounds(self):
@@ -61,6 +60,9 @@ class Configuration:
         max_x = max(self.alive_cells, key=lambda x: x[0])[0]
         max_y = max(self.alive_cells, key=lambda y: y[1])[1]
         return min_x, max_x, min_y, max_y
+
+    def set_bounds(self, min_x=0, max_x=0, min_y=0, max_y=0):
+        return self
 
     def place(self, config, loc=(0, 0)):
         if callable(config):
@@ -90,14 +92,9 @@ class Configuration:
         c = self.__class__()
         c.alive_cells = self.alive_cells.copy()
         return c
-    
-    def set_rules(self, born='3', stay='23'):
-        return self
 
-    def get_bounds(self):
-        return (0, 0)
-
-    def set_bounds(self, min_x=0, max_x=0, min_y=0, max_y=0):
+    def set_render_type(self, render_type):
+        self.render_type = render_type
         return self
 
     def render(self, **kwargs):
