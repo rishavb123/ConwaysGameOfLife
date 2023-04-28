@@ -208,9 +208,9 @@ def main(args):
             cell_size = new_cell_size
 
         if clicked[pygame.K_LEFT] or clicked[pygame.K_KP_PLUS]:
-            answer = simpledialog.askstring(title="Save the current configuration", prompt="Please specify the file name to save this configuration to. It will be saved to ./configs/{FILE NAME}.pkl.")
+            answer = simpledialog.askstring(title="Save the current configuration", prompt="Please specify the file name to save this configuration to. It will be saved to ./configs/saved/{FILE NAME}.pkl.")
             if answer is not None:
-                g.save(f"./configs/{answer}.pkl")
+                g.save(f"./configs/saved/{answer}.pkl")
         if clicked[pygame.K_RIGHT] or clicked[pygame.K_KP_ENTER]:
             ticking = not ticking
 
