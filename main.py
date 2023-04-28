@@ -10,10 +10,7 @@ pygame.init()
 def main():
     g = GameOfLife(render_type=RenderType.PYGAME)
 
-    # g.place(GliderGun().rotate_cw().rotate_cw().shift_to_origin())
-    # g.place(GliderGun(), loc=(-25, -20))
-    # g.load("./configs/double_glider.pkl")
-    g.load_from_lexicon("gig")
+    g.place(Eater)
 
     screen = pygame.display.set_mode((1280, 720))
     clock = pygame.time.Clock()
@@ -31,7 +28,7 @@ def main():
     NUM_CELLS_X = 100
     cell_size = 1280 / NUM_CELLS_X
     kwargs = dict(
-        screen=screen, color='white', bg_color='black'
+        screen=screen, color='white', bg_color='black', pygame=pygame
     )
 
     g.render(**kwargs)
@@ -80,6 +77,9 @@ def main():
         if keys[pygame.K_e]:
             df = -1.5 * dt
             tick_period = tick_period / (1 + df * tick_period)
+
+        if keys[pygame.K_c]:
+            g.alive_cells = set()
 
         w = screen.get_width()
         h = screen.get_height()

@@ -1,6 +1,5 @@
 import pickle
 from enum import Enum
-import pygame
 
 class RenderType(Enum):
     PRINT_STATE=0
@@ -85,6 +84,7 @@ class Configuration:
             color = kwargs.get("color", "#000")
             bg_color = kwargs.get("bg_color", None)
             ox, oy = kwargs.get("origin", (0, 0))
+            pygame = kwargs["pygame"]
 
             w = screen.get_width()
             h = screen.get_height()
