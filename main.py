@@ -10,7 +10,7 @@ pygame.init()
 def initialize_game_dev(g: GameOfLife):
     g.clear()
 
-    g.load_from_lexicon("gourmet")
+    g.load("./rendal-attic/memcell.txt")
 
     return g
 

@@ -130,12 +130,27 @@ class Configuration:
                     pygame.draw.line(surface=screen, color=grid_color, start_pos=(0, sy), end_pos=(w, sy))
 
     def save(self, fname):
+        if fname.split(".")[-1] != 'pkl':
+            raise ValueError("File name must have the pkl extension.")
         with open(fname, "wb") as f:
             shifted = self.copy().shift_to_origin()
             pickle.dump(shifted.alive_cells, f)
         return self
+    
+    def load(self, name, loc=(0, 0)):
+        if "." not in name:
+            return self.load_from_lexicon(lexicon_name=name, loc=loc)
+        ext = name.split(".")[-1]
+        if ext == 'txt':
+            return self.load_from_txt(fname=name, loc=loc)
+        elif ext == 'pkl':
+            return self.load_from_pkl(fname=name, loc=loc)
+        elif ext == 'rle':
+            return self.load_from_rle(fname=name, loc=loc)
+        else:
+            return self.load_from_lexicon(lexicon_name=name, loc=loc)
 
-    def load(self, fname, loc=(0, 0)):
+    def load_from_pkl(self, fname, loc=(0, 0)):
         with open(fname, "rb") as f:
             c = Configuration(pickle.load(f))
             self.place(c, loc=loc)
@@ -168,3 +183,21 @@ class Configuration:
             if y < 0:
                 raise ValueError(f"The pattern {lexicon_name} has no pattern in the lexicon.txt file. Make sure to specify the name of something that includes a pattern image in the lexicon.")
             self.place(c, loc=loc)
+        return self
+
+    def load_from_txt(self, fname, loc=(0, 0)):
+        with open(fname) as f:
+            y = 0
+            c = Configuration()
+            for line in f:
+                if line.startswith("#"):
+                    continue
+                for x in range(len(line)):
+                    if line[x] == '*':
+                        c.set_cell((x, y))
+                y += 1
+            self.place(c, loc=loc)
+        return self
+    
+    def load_from_rle(self, fname, loc=(0, 0)):
+        pass
