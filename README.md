@@ -9,6 +9,7 @@ Run with `python main.py`. Within the pygame window use these controls:
 - LEFT arrow key to save the configuration to a file named by the timestamp
 - E to slow down the simulation
 - R to speed up the simulation
+- C to clear the game board
 - Q to quit
 
 To create new configurations in the code use the following methods:
