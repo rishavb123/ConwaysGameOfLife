@@ -1,6 +1,7 @@
 import pickle
 from enum import Enum
 import numpy as np
+import re
 
 class RenderType(Enum):
     PRINT_STATE=0
@@ -86,6 +87,15 @@ class Configuration:
         c = self.__class__()
         c.alive_cells = self.alive_cells.copy()
         return c
+    
+    def set_rules(self, born='3', stay='23'):
+        return self
+
+    def get_bounds(self):
+        return (0, 0)
+
+    def set_bounds(self, min_x=0, max_x=0, min_y=0, max_y=0):
+        return self
 
     def render(self, **kwargs):
         if self.render_type == RenderType.PRINT_STATE:
@@ -200,4 +210,86 @@ class Configuration:
         return self
     
     def load_from_rle(self, fname, loc=(0, 0)):
-        pass
+        with open(fname) as f:
+            lines = f.readlines()
+        lines = [line.strip() for line in lines]
+        lines = [line for line in lines if len(line) == 0 or line[0] != '#']
+        header = lines[0].lower()
+        lines = lines[1:]
+        lines = ''.join(lines).strip('\n')
+
+        header_patterns = [
+            re.compile(r'x\s?=\s?(\d+).*?y\s?=\s?(\d+).*?s(\d+).*?b(\d+).*?'),
+            re.compile(r'x\s?=\s?(\d+).*?y\s?=\s?(\d+).*?b(\d+).*?s(\d+).*?'),
+            re.compile(r'x\s?=\s?(\d+).*?y\s?=\s?(\d+).*?'),
+            re.compile(r'y\s?=\s?(\d+).*?x\s?=\s?(\d+).*?s(\d+).*?b(\d+).*?'),
+            re.compile(r'y\s?=\s?(\d+).*?x\s?=\s?(\d+).*?b(\d+).*?s(\d+).*?'),
+            re.compile(r'y\s?=\s?(\d+).*?x\s?=\s?(\d+).*?'),
+            re.compile(r'.*?'),
+        ]
+
+        var_reader = [
+            dict(x=1, y=2, s=3, b=4),
+            dict(x=1, y=2, b=3, s=4),
+            dict(x=1, y=2, b='3', s='23'),
+            dict(y=1, x=2, s=3, b=4),
+            dict(y=1, x=2, b=3, s=4),
+            dict(y=1, x=2, b='3', s='23'),
+            dict(x='0', y='0', b='3', s='23')
+        ]
+
+        matches = None
+        pattern_idx = 0
+
+        while matches is None:
+            if pattern_idx >= len(header_patterns):
+                raise ValueError(f"The file {fname} does not have a header of any of the allowed formats. Please specify a valid file.")
+
+            matches = header_patterns[pattern_idx].match(header)
+            pattern_idx += 1
+
+        pattern_idx -= 1
+
+        def get_from_header(k):
+            r = var_reader[pattern_idx][k]
+            if type(r) == int:
+                return matches.group(r)
+            return r
+        
+        w = int(get_from_header('x'))
+        h = int(get_from_header('y'))
+        born = get_from_header('b')
+        stay = get_from_header('s')
+
+        self.set_rules(born=born, stay=stay)
+    
+        self.set_bounds(max_x=w, max_y=h)
+
+        line_pattern = re.compile(r'(\d*)([bo$!])')
+        line_data = line_pattern.findall(lines)
+
+        line_data = [
+            (1, match[1]) if match[0] == '' else (int(match[0]), match[1]) 
+            for match in line_data
+        ]
+
+        c = Configuration()
+        x, y = 0, 0
+
+        for seq in line_data:
+            n, act = seq
+            if act == 'b':
+                x += n
+            elif act == 'o':
+                for _ in range(n):
+                    c.set_cell((x, y))
+                    x += 1
+            elif act == '$':
+                y += n
+                x = 0
+            elif act == '!':
+                pass # should be the last action
+
+        self.place(c, loc=loc)
+        return self
+            
