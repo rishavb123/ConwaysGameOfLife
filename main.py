@@ -174,6 +174,8 @@ def main(args, initialize_game=initialize_game_dev):
                 g.flip_cell((mi, mj))
             else:
                 g.place(loaded_object, loc=(mi, mj))
+        elif keys[pygame.K_t]:
+            g.clear_cell((mi, mj))
         mouse_old_pressed = mouse_pressed
 
         sx = ox + mi * cell_size
@@ -242,6 +244,7 @@ def main(args, initialize_game=initialize_game_dev):
         if show_controls:
             controls = {
                 "click Mouse": "flip a cell",
+                "hold T": "turn on eraser mode",
                 "hold WASD": "move the camera",
                 "hold UP / MouseWheel UP": "zoom in",
                 "hold DOWN / MouseWheel DOWN": "zoom out",

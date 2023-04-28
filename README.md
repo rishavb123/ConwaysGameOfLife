@@ -18,6 +18,7 @@ Run with `python main.py`. Run `python main.py -h` to see the runtime configurat
 
 Within the pygame window use these controls:
 - Click to flip a cell
+- T to turn on eraser mode
 - WASD to move the "camera"
 - UP (or MOUSEWHEEL) to zoom in
 - DOWN (or MOUSEWHEEL) to zoom out
