@@ -297,5 +297,5 @@ def main(args):
             ticker += dt
 
 if __name__ == "__main__":
-    args = get_args(make_parser(), configs_root="./run_config")
+    args = get_args(make_parser(), configs_root="./run_config", default_ext="yml")
     main(args)
