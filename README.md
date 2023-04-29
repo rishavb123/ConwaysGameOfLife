@@ -12,7 +12,7 @@ Dependencies:
 - tkinter
 - PyYaml
 
-Run with `python main.py`. Run `python main.py -h` to see the runtime configurations that can be used through command line arguments or a yml or json file in the run_config folder to specify runtime parameters.
+Run with `python main.py`. Run `python main.py -h` to see the runtime configurations that can be used through command line arguments or a yml or json file in the run_config folder to specify runtime parameters. Once a runtime configuration is create, it can be used using `python main.py -c FILE_NAME`.
 
 
 Within the pygame window use these controls:
