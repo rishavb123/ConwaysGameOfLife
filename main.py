@@ -87,7 +87,7 @@ def main(args):
                 running = False
             elif event.type == pygame.MOUSEWHEEL:
                 inc = args.scroll_zoom_speed * event.y
-                new_cell_size = cell_size + inc
+                new_cell_size = max(cell_size + inc, 1)
                 ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
                 oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
                 cell_size = new_cell_size
@@ -209,14 +209,14 @@ def main(args):
 
         if keys[pygame.K_UP]:
             inc = args.zoom_speed * dt
-            new_cell_size = cell_size + inc
+            new_cell_size = max(cell_size + inc, 1)
             ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
             cell_size = new_cell_size
 
         if keys[pygame.K_DOWN]:
             inc = -args.zoom_speed * dt
-            new_cell_size = cell_size + inc
+            new_cell_size = max(cell_size + inc, 1)
             ox = w / 2 - new_cell_size / cell_size * (w / 2 - ox)
             oy = h / 2 - new_cell_size / cell_size * (h / 2 - oy)
             cell_size = new_cell_size
