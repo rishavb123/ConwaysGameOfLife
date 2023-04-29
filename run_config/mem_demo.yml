@@ -1,0 +1,3 @@
+init_tick_frequency: 30
+framerate: 60
+initial_config: ./configs/saved/pseudo_memory.pkl
