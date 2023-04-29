@@ -1,0 +1,3 @@
+init_tick_frequency: 100
+framerate: 100
+initial_config: ./configs/saved/circuit_clock.pkl
